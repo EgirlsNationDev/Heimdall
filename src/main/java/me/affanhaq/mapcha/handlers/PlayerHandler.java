@@ -1,10 +1,12 @@
 package me.affanhaq.mapcha.handlers;
 
+import fr.xephi.authme.events.LoginEvent;
 import me.affanhaq.mapcha.Mapcha;
 import me.affanhaq.mapcha.events.CaptchaFailedEvent;
 import me.affanhaq.mapcha.events.CaptchaSuccessEvent;
 import me.affanhaq.mapcha.player.CaptchaPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,6 +34,10 @@ public class PlayerHandler implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+
+        if (mapcha.isAuthMeHookActive()) {
+            return;
+        }
 
         Player player = event.getPlayer();
 
@@ -100,9 +106,19 @@ public class PlayerHandler implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        event.setCancelled(
-                mapcha.getPlayerManager().getPlayer(event.getPlayer()) != null && !validCommand(event.getMessage())
-        );
+
+        CaptchaPlayer cPlayer = mapcha.getPlayerManager().getPlayer(event.getPlayer());
+
+        if (cPlayer == null) {
+            return;
+        }
+
+        if (event.getMessage().equals("/" + cPlayer.getCaptcha())) {
+            Bukkit.getScheduler().runTask(mapcha, () -> Bukkit.getPluginManager().callEvent(new CaptchaSuccessEvent(cPlayer)));
+        } else if (!validCommand(event.getMessage())) {
+            event.setCancelled(true);
+        }
+        //event.setCancelled(mapcha.getPlayerManager().getPlayer(event.getPlayer()) != null && !validCommand(event.getMessage()));
     }
 
     /**
@@ -113,7 +129,7 @@ public class PlayerHandler implements Listener {
      */
     private boolean validCommand(String message) {
         for (String command : commands) {
-            if (message.contains(command)) {
+            if (message.contains(command) || message.contains("/ecaptcha")) {
                 return true;
             }
         }
@@ -123,7 +139,7 @@ public class PlayerHandler implements Listener {
     /**
      * @return a random string with len 4
      */
-    private String genCaptcha() {
+    public static String genCaptcha() {
         String charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder random = new StringBuilder();
         for (int i = 0; i < 4; i++) {

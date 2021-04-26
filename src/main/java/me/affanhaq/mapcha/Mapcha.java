@@ -5,12 +5,16 @@ import com.google.common.io.ByteStreams;
 import me.affanhaq.keeper.Keeper;
 import me.affanhaq.keeper.data.ConfigFile;
 import me.affanhaq.keeper.data.ConfigValue;
+import me.affanhaq.mapcha.events.AuthMeListener;
 import me.affanhaq.mapcha.handlers.CaptchaHandler;
 import me.affanhaq.mapcha.handlers.MapHandler;
 import me.affanhaq.mapcha.handlers.PlayerHandler;
+import me.affanhaq.mapcha.handlers.commandHandler;
+import me.affanhaq.mapcha.hooks.AuthMeHook;
 import me.affanhaq.mapcha.player.CaptchaPlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,17 +29,29 @@ public class Mapcha extends JavaPlugin {
     private final CaptchaPlayerManager playerManager = new CaptchaPlayerManager();
     private final Set<UUID> completedCache = new HashSet<>();
 
+    private Listener authMeListener;
+    private AuthMeHook authMeHook;
+
     @Override
     public void onEnable() {
         new Keeper(this)
                 .register(new Config())
                 .load();
 
-        // registering events
+        authMeHook = new AuthMeHook();
         PluginManager pluginManager = Bukkit.getPluginManager();
+
+        if(pluginManager.isPluginEnabled("AuthMe")){
+            registerAuthMeComponents();
+        }
+
+
+        // registering events
         pluginManager.registerEvents(new PlayerHandler(this), this);
         pluginManager.registerEvents(new MapHandler(this), this);
         pluginManager.registerEvents(new CaptchaHandler(this), this);
+
+        this.getCommand("ecaptcha").setExecutor(new commandHandler(this));
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
@@ -60,6 +76,23 @@ public class Mapcha extends JavaPlugin {
             out.writeUTF(successServerName);
             player.sendPluginMessage(javaPlugin, "BungeeCord", out.toByteArray());
         }
+    }
+
+    public void registerAuthMeComponents(){
+        Bukkit.getLogger().info("Hooking into authme.");
+        authMeHook.initializeHook();
+        if(authMeListener == null){
+            authMeListener = new AuthMeListener(this);
+            getServer().getPluginManager().registerEvents(authMeListener, this);
+        }
+    }
+
+    public void removeAuthMeHook(){
+        authMeHook.removeAuthMeHook();
+    }
+
+    public boolean isAuthMeHookActive(){
+        return authMeHook.isAuthMeHookActive();
     }
 
     @ConfigFile("config.yml")
