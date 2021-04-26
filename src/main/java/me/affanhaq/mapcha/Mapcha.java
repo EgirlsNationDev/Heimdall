@@ -6,10 +6,7 @@ import me.affanhaq.keeper.Keeper;
 import me.affanhaq.keeper.data.ConfigFile;
 import me.affanhaq.keeper.data.ConfigValue;
 import me.affanhaq.mapcha.events.AuthMeListener;
-import me.affanhaq.mapcha.handlers.CaptchaHandler;
-import me.affanhaq.mapcha.handlers.MapHandler;
-import me.affanhaq.mapcha.handlers.PlayerHandler;
-import me.affanhaq.mapcha.handlers.commandHandler;
+import me.affanhaq.mapcha.handlers.*;
 import me.affanhaq.mapcha.hooks.AuthMeHook;
 import me.affanhaq.mapcha.player.CaptchaPlayerManager;
 import org.bukkit.Bukkit;
@@ -20,7 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-import static me.affanhaq.mapcha.Mapcha.Config.sendToSuccessServer;
 import static me.affanhaq.mapcha.Mapcha.Config.successServerName;
 import static org.bukkit.ChatColor.*;
 
@@ -51,9 +47,15 @@ public class Mapcha extends JavaPlugin {
         pluginManager.registerEvents(new MapHandler(this), this);
         pluginManager.registerEvents(new CaptchaHandler(this), this);
 
-        this.getCommand("ecaptcha").setExecutor(new commandHandler(this));
+        this.getCommand("captcha").setExecutor(new commandHandler(this));
+        this.getCommand("join").setExecutor(new joinCommand(this));
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+    }
+
+    @Override
+    public void onDisable(){
+        Bukkit.getLogger().info("Shutting down Mapcha");
     }
 
     public CaptchaPlayerManager getPlayerManager() {
@@ -70,12 +72,11 @@ public class Mapcha extends JavaPlugin {
      * @param player the player to send
      */
     public static void sendPlayerToServer(JavaPlugin javaPlugin, Player player) {
-        if (sendToSuccessServer && successServerName != null && !successServerName.isEmpty()) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");
             out.writeUTF(successServerName);
             player.sendPluginMessage(javaPlugin, "BungeeCord", out.toByteArray());
-        }
+            Bukkit.getLogger().info("Connecting " + player.getName() + " to anarchy");
     }
 
     public void registerAuthMeComponents(){
@@ -114,11 +115,8 @@ public class Mapcha extends JavaPlugin {
         @ConfigValue("captcha.time")
         public static int timeLimit = 30;
 
-        @ConfigValue("server.enabled")
-        public static boolean sendToSuccessServer = false;
-
         @ConfigValue("server.name")
-        public static String successServerName = "";
+        public static String successServerName = "anarchy";
 
         @ConfigValue("messages.success")
         public static String successMessage = "Captcha " + GREEN + "solved!";

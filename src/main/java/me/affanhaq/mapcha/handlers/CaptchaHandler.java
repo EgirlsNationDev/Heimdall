@@ -5,6 +5,7 @@ import me.affanhaq.mapcha.events.CaptchaFailedEvent;
 import me.affanhaq.mapcha.events.CaptchaSuccessEvent;
 import me.affanhaq.mapcha.player.CaptchaPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -31,7 +32,8 @@ public class CaptchaHandler implements Listener {
         }
 
         mapcha.getPlayerManager().removePlayer(player);
-        Mapcha.sendPlayerToServer(mapcha, player.getPlayer());
+        String msg = ChatColor.GOLD + "[" + ChatColor.RED + "Captcha" + ChatColor.GOLD + "] " + ChatColor.GREEN + "Now do /join to join the main server";
+        player.getPlayer().sendMessage(msg);
     }
 
     @EventHandler

@@ -12,6 +12,7 @@ import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MapHandler implements Listener {
@@ -38,7 +39,11 @@ public class MapHandler implements Listener {
                 if (p == null) {
                     old.forEach(map::addRenderer);
                 } else {
-                    mapCanvas.drawImage(0, 0, p.render());
+                    try {
+                        mapCanvas.drawImage(0, 0, p.render(mapcha));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

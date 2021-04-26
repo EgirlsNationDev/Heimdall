@@ -9,12 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class commandHandler implements CommandExecutor {
 
@@ -33,7 +31,7 @@ public class commandHandler implements CommandExecutor {
         }
 
         if(args.length == 0){
-            sender.sendMessage(ChatColor.RED + "You need to fill in the captcha. Look at the map and do the command again like this /ecaptcha <code>");
+            sender.sendMessage(ChatColor.RED + "You need to fill in the captcha. Look at the map and do the command again like this /captcha <code>");
             Bukkit.getLogger().info(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames().toString());
         }else{
             Player player = (Player) sender;

@@ -11,6 +11,9 @@ permissions:
     default: op
 
 commands:
-  ecaptcha:
-    description: Maptcha command
-    usage: /eaptcha <your captcha>
+  captcha:
+    description: Captcha command
+    usage: /captcha <your captcha>
+  join:
+    description: Makes you join the server loool
+    usage: /join

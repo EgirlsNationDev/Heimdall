@@ -18,6 +18,7 @@
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
                     <include>plugin.yml</include>
+                    <include>egirl.png</include>
                 </includes>
             </resource>
         </resources>

@@ -1,12 +1,10 @@
 package me.affanhaq.mapcha.handlers;
 
-import fr.xephi.authme.events.LoginEvent;
 import me.affanhaq.mapcha.Mapcha;
 import me.affanhaq.mapcha.events.CaptchaFailedEvent;
 import me.affanhaq.mapcha.events.CaptchaSuccessEvent;
 import me.affanhaq.mapcha.player.CaptchaPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,13 +38,6 @@ public class PlayerHandler implements Listener {
         }
 
         Player player = event.getPlayer();
-
-        // checking if player has permission to bypass the captcha or player has already completed the captcha before
-        // by default OPs have the '*' permission so this method will return true
-        if (player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(mapcha, () -> Mapcha.sendPlayerToServer(mapcha, player), 15);
-            return;
-        }
 
         // creating a captcha player
         CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha)
@@ -129,7 +120,7 @@ public class PlayerHandler implements Listener {
      */
     private boolean validCommand(String message) {
         for (String command : commands) {
-            if (message.contains(command) || message.contains("/ecaptcha")) {
+            if (message.contains(command) || message.contains("/captcha")) {
                 return true;
             }
         }

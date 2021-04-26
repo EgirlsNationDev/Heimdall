@@ -2,9 +2,9 @@ package me.affanhaq.mapcha.events;
 
 import fr.xephi.authme.events.LoginEvent;
 import me.affanhaq.mapcha.Mapcha;
-import me.affanhaq.mapcha.handlers.PlayerHandler;
 import me.affanhaq.mapcha.player.CaptchaPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,8 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 
-import static me.affanhaq.mapcha.Mapcha.Config.permission;
-import static me.affanhaq.mapcha.Mapcha.Config.useCompletedCache;
 import static me.affanhaq.mapcha.handlers.PlayerHandler.genCaptcha;
 
 public class AuthMeListener implements Listener {
@@ -37,13 +35,6 @@ public class AuthMeListener implements Listener {
         }
 
         Player player = event.getPlayer();
-
-        // checking if player has permission to bypass the captcha or player has already completed the captcha before
-        // by default OPs have the '*' permission so this method will return true
-        if (player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(mapcha, () -> Mapcha.sendPlayerToServer(mapcha, player), 15);
-            return;
-        }
 
         // creating a captcha player
         CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha)
@@ -65,6 +56,10 @@ public class AuthMeListener implements Listener {
         // giving the player the map and adding them to the captcha array
         captchaPlayer.getPlayer().getInventory().setItemInHand(itemStack);
         mapcha.getPlayerManager().addPlayer(captchaPlayer);
+
+        //Sending message to player with instructions because they are pepegas
+        String msg = ChatColor.GOLD + "[" + ChatColor.RED + "Captcha" + ChatColor.GOLD + "] " + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>";
+        player.sendMessage(msg);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
