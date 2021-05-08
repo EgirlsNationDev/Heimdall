@@ -5,6 +5,7 @@ import me.affanhaq.mapcha.events.CaptchaFailedEvent;
 import me.affanhaq.mapcha.events.CaptchaSuccessEvent;
 import me.affanhaq.mapcha.player.CaptchaPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,6 +40,11 @@ public class PlayerHandler implements Listener {
 
         Player player = event.getPlayer();
 
+        if(player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
+            player.sendMessage(prefix + " " + ChatColor.GREEN + "Do /join to join the server." );
+            return;
+        }
+
         // creating a captcha player
         CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha)
                 .cleanPlayer();
@@ -59,6 +65,9 @@ public class PlayerHandler implements Listener {
         // giving the player the map and adding them to the captcha array
         captchaPlayer.getPlayer().getInventory().setItemInHand(itemStack);
         mapcha.getPlayerManager().addPlayer(captchaPlayer);
+
+        player.sendMessage(
+                prefix + " " + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>" );
     }
 
     @EventHandler(priority = EventPriority.HIGH)

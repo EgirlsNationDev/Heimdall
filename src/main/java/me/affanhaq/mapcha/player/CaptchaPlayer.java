@@ -1,5 +1,8 @@
 package me.affanhaq.mapcha.player;
 
+import com.hyd.captcha.CaptchaGenerator;
+import com.hyd.captcha.FontRepository;
+import com.hyd.captcha.background.CirclesBackground;
 import me.affanhaq.mapcha.Mapcha;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -56,6 +59,12 @@ public class CaptchaPlayer {
 
         BufferedImage in = ImageIO.read(mapcha.getResource("egirl.png"));
 
+        CaptchaGenerator captchaGenerator = new CaptchaGenerator();
+        FontRepository.pickRandomFont();
+        captchaGenerator.setBackground(new CirclesBackground());
+
+        BufferedImage captchaImage = captchaGenerator.generate(130, 50, captcha);
+
         BufferedImage image = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
 
@@ -79,7 +88,8 @@ public class CaptchaPlayer {
 
         g.setFont(new Font("Roboto", Font.BOLD, 40));
         g.setColor(Color.WHITE);
-        g.drawString(captcha, (int) ((image.getWidth() - g.getFontMetrics().getStringBounds(captcha, g).getWidth()) / 2), 105);
+        g.drawImage(captchaImage, 0, 80, null);
+        //g.drawString(captcha, (int) ((image.getWidth() - g.getFontMetrics().getStringBounds(captcha, g).getWidth()) / 2), 105);
 
         return image;
     }

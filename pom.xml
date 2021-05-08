@@ -110,6 +110,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.github.yiding-he</groupId>
+            <artifactId>hydrogen-captcha</artifactId>
+            <version>be0361ec56</version>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>16.0.2</version>

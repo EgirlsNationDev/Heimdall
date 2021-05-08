@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 
+import static me.affanhaq.mapcha.Mapcha.Config.*;
 import static me.affanhaq.mapcha.handlers.PlayerHandler.genCaptcha;
 
 public class AuthMeListener implements Listener {
@@ -35,6 +36,11 @@ public class AuthMeListener implements Listener {
         }
 
         Player player = event.getPlayer();
+
+        if(player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
+            player.sendMessage(prefix + " " + ChatColor.GREEN + "Do /join to join the server." );
+            return;
+        }
 
         // creating a captcha player
         CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha)
@@ -58,8 +64,8 @@ public class AuthMeListener implements Listener {
         mapcha.getPlayerManager().addPlayer(captchaPlayer);
 
         //Sending message to player with instructions because they are pepegas
-        String msg = ChatColor.GOLD + "[" + ChatColor.RED + "Captcha" + ChatColor.GOLD + "] " + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>";
-        player.sendMessage(msg);
+        player.sendMessage(
+                prefix + " " + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>" );
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

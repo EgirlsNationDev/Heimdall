@@ -48,6 +48,7 @@ public class CaptchaHandler implements Listener {
             player.getPlayer().sendMessage(
                     prefix + " " + retryMessage.replace("{CURRENT}", String.valueOf(player.getTries())).replace("{MAX}", String.valueOf(tries))
             );
+            player.getPlayer().sendMessage(prefix + " " + ChatColor.RED + "Make sure you're not using fancy chat or anything that alters the way you chat");
         }
     }
 
