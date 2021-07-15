@@ -34,6 +34,14 @@ public class PlayerHandler implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
 
+        for(Player p : Bukkit.getOnlinePlayers()){
+            event.getPlayer().hidePlayer(mapcha, p);
+        }
+
+        for(Player p : Bukkit.getOnlinePlayers()){
+            p.hidePlayer(mapcha, event.getPlayer());
+        }
+
         if (mapcha.isAuthMeHookActive()) {
             return;
         }

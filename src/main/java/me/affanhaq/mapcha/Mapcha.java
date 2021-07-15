@@ -100,6 +100,8 @@ public class Mapcha extends JavaPlugin {
     public static class Config {
         public static String permission = "mapcha.bypass";
 
+        public static String oldfagPermission = "egirls.rank.oldfag";
+
         @ConfigValue("prefix")
         public static String prefix = "[" + GREEN + "Mapcha" + RESET + "]";
 

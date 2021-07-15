@@ -37,7 +37,7 @@ public class AuthMeListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if(player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
+        if(player.hasPermission(permission) || player.hasPermission(oldfagPermission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
             player.sendMessage(prefix + " " + ChatColor.GREEN + "Do /join to join the server." );
             return;
         }
