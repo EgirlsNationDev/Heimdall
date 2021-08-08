@@ -34,7 +34,7 @@ hs_err_pid*
 
 # Intellij Idea
 .idea/
-.target/
+target/
 
 *.iml
 *.iws

@@ -1,5 +1,5 @@
 name: Mapcha
-version: 2.0
+version: ${project.version}
 main: me.affanhaq.mapcha.Mapcha
 description: A simple captcha plugin, which uses maps as the captcha.
 softdepend:

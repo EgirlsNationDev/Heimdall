@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-import static me.affanhaq.mapcha.Mapcha.Config.successServerName;
+import static me.affanhaq.mapcha.Mapcha.Config.*;
 import static org.bukkit.ChatColor.*;
 
 public class Mapcha extends JavaPlugin {
@@ -71,12 +71,24 @@ public class Mapcha extends JavaPlugin {
      *
      * @param player the player to send
      */
-    public static void sendPlayerToServer(JavaPlugin javaPlugin, Player player) {
+    public static void sendPlayerToMain(JavaPlugin javaPlugin, Player player) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");
-            out.writeUTF(successServerName);
+            out.writeUTF(mainServerName);
             player.sendPluginMessage(javaPlugin, "BungeeCord", out.toByteArray());
             Bukkit.getLogger().info("Connecting " + player.getName() + " to anarchy");
+    }
+
+    public static void sendPlayerToTest(JavaPlugin javaPlugin, Player player) {
+        if(testServerName.isEmpty()){
+            Bukkit.getLogger().warning("Test server isn't configured. The player won't be sent there!");
+            return;
+        }
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Connect");
+        out.writeUTF(testServerName);
+        player.sendPluginMessage(javaPlugin, "BungeeCord", out.toByteArray());
+        Bukkit.getLogger().info("Connecting " + player.getName() + " to temp");
     }
 
     public void registerAuthMeComponents(){
@@ -117,8 +129,14 @@ public class Mapcha extends JavaPlugin {
         @ConfigValue("captcha.time")
         public static int timeLimit = 30;
 
-        @ConfigValue("server.name")
-        public static String successServerName = "anarchy";
+        @ConfigValue("misc.hidePlayers")
+        public static boolean hidePlayers = true;
+
+        @ConfigValue("server.mainName")
+        public static String mainServerName = "anarchy";
+
+        @ConfigValue("server.testName")
+        public static String testServerName = "temp";
 
         @ConfigValue("messages.success")
         public static String successMessage = "Captcha " + GREEN + "solved!";

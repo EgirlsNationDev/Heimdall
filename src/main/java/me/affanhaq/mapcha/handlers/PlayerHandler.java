@@ -34,12 +34,8 @@ public class PlayerHandler implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
 
-        for(Player p : Bukkit.getOnlinePlayers()){
-            event.getPlayer().hidePlayer(mapcha, p);
-        }
-
-        for(Player p : Bukkit.getOnlinePlayers()){
-            p.hidePlayer(mapcha, event.getPlayer());
+        if(hidePlayers){
+            hidePlayers(event.getPlayer());
         }
 
         if (mapcha.isAuthMeHookActive()) {
@@ -156,4 +152,12 @@ public class PlayerHandler implements Listener {
         return random.toString();
     }
 
+    public void hidePlayers(Player player){
+        for(Player p : Bukkit.getOnlinePlayers()){
+            player.hidePlayer(mapcha, p);
+        }
+        for(Player p : Bukkit.getOnlinePlayers()){
+            p.hidePlayer(mapcha, p);
+        }
+    }
 }
