@@ -37,8 +37,8 @@ public class AuthMeListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if(player.hasPermission(permission) || player.hasPermission(oldfagPermission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
-            player.sendMessage(prefix + " " + ChatColor.GREEN + "Do /join to join the server." );
+        if(player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
+            player.sendMessage(prefix + ChatColor.GREEN + "Do /join to join the server." );
             return;
         }
 
@@ -55,7 +55,7 @@ public class AuthMeListener implements Listener {
             itemStack = new ItemStack(Material.valueOf("EMPTY_MAP"));
         }
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("Mapcha");
+        itemMeta.setDisplayName("Capcha");
         itemMeta.setLore(Collections.singletonList("Open the map to see the captcha."));
         itemStack.setItemMeta(itemMeta);
 
@@ -65,7 +65,7 @@ public class AuthMeListener implements Listener {
 
         //Sending message to player with instructions because they are pepegas
         player.sendMessage(
-                prefix + " " + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>" );
+                prefix + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>" );
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

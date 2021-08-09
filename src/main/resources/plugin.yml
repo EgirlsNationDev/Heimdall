@@ -1,4 +1,4 @@
-name: Mapcha
+name: Heimdall
 version: ${project.version}
 main: me.affanhaq.mapcha.Mapcha
 description: A simple captcha plugin, which uses maps as the captcha.
@@ -6,7 +6,7 @@ softdepend:
   - AuthMe
 
 permissions:
-  mapcha.bypass:
+  heimdall.bypass:
     desciption: Allows you to bypass the captcha.
     default: op
 

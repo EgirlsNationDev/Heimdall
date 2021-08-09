@@ -11,10 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -45,7 +42,7 @@ public class PlayerHandler implements Listener {
         Player player = event.getPlayer();
 
         if(player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
-            player.sendMessage(prefix + " " + ChatColor.GREEN + "Do /join to join the server." );
+            player.sendMessage(prefix + ChatColor.GREEN + "Do /join to join the server." );
             return;
         }
 
@@ -62,7 +59,7 @@ public class PlayerHandler implements Listener {
             itemStack = new ItemStack(Material.valueOf("EMPTY_MAP"));
         }
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("Mapcha");
+        itemMeta.setDisplayName("Capcha");
         itemMeta.setLore(Collections.singletonList("Open the map to see the captcha."));
         itemStack.setItemMeta(itemMeta);
 
@@ -71,7 +68,7 @@ public class PlayerHandler implements Listener {
         mapcha.getPlayerManager().addPlayer(captchaPlayer);
 
         player.sendMessage(
-                prefix + " " + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>" );
+                prefix + ChatColor.GREEN + "Right click with the map and do /captcha <captcha>" );
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -146,7 +143,7 @@ public class PlayerHandler implements Listener {
     public static String genCaptcha() {
         String charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder random = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < lenght; i++) {
             random.append(charset.charAt(new Random().nextInt(charset.length() - 1)));
         }
         return random.toString();
@@ -154,10 +151,10 @@ public class PlayerHandler implements Listener {
 
     public void hidePlayers(Player player){
         for(Player p : Bukkit.getOnlinePlayers()){
-            player.hidePlayer(mapcha, p);
+            player.hidePlayer(p);
         }
         for(Player p : Bukkit.getOnlinePlayers()){
-            p.hidePlayer(mapcha, p);
+            p.hidePlayer(player);
         }
     }
 }

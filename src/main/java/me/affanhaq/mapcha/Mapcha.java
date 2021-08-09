@@ -10,6 +10,7 @@ import me.affanhaq.mapcha.handlers.*;
 import me.affanhaq.mapcha.hooks.AuthMeHook;
 import me.affanhaq.mapcha.player.CaptchaPlayerManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -33,6 +34,14 @@ public class Mapcha extends JavaPlugin {
         new Keeper(this)
                 .register(new Config())
                 .load();
+
+        prefix = prefix + " ";
+        if(lenght > 8){
+            lenght = 8;
+        }
+        if(lenght < 2){
+            lenght = 2;
+        }
 
         authMeHook = new AuthMeHook();
         PluginManager pluginManager = Bukkit.getPluginManager();
@@ -76,23 +85,23 @@ public class Mapcha extends JavaPlugin {
             out.writeUTF("Connect");
             out.writeUTF(mainServerName);
             player.sendPluginMessage(javaPlugin, "BungeeCord", out.toByteArray());
-            Bukkit.getLogger().info("Connecting " + player.getName() + " to anarchy");
+            Bukkit.getLogger().info(prefix + ChatColor.GREEN + "Connecting " + player.getName() + " to anarchy");
     }
 
     public static void sendPlayerToTest(JavaPlugin javaPlugin, Player player) {
         if(testServerName.isEmpty()){
-            Bukkit.getLogger().warning("Test server isn't configured. The player won't be sent there!");
+            Bukkit.getLogger().info(prefix + RED + "Test server isn't configured. The player won't be sent there!");
             return;
         }
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(testServerName);
         player.sendPluginMessage(javaPlugin, "BungeeCord", out.toByteArray());
-        Bukkit.getLogger().info("Connecting " + player.getName() + " to temp");
+        Bukkit.getLogger().info(prefix + ChatColor.GREEN + "Connecting " + player.getName() + " to temp");
     }
 
     public void registerAuthMeComponents(){
-        Bukkit.getLogger().info("Hooking into authme.");
+        Bukkit.getLogger().info(prefix + ChatColor.GREEN + "Hooking into authme.");
         authMeHook.initializeHook();
         if(authMeListener == null){
             authMeListener = new AuthMeListener(this);
@@ -110,15 +119,16 @@ public class Mapcha extends JavaPlugin {
 
     @ConfigFile("config.yml")
     public static class Config {
-        public static String permission = "mapcha.bypass";
-
-        public static String oldfagPermission = "egirls.rank.oldfag";
+        public static String permission = "heimdall.bypass";
 
         @ConfigValue("prefix")
-        public static String prefix = "[" + GREEN + "Mapcha" + RESET + "]";
+        public static String prefix = "[" + GREEN + "Heimdall" + RESET + "]";
 
         @ConfigValue("commands")
         public static List<String> commands = Arrays.asList("/register", "/login");
+
+        @ConfigValue("captcha.lenght")
+        public static int lenght = 4;
 
         @ConfigValue("captcha.cache")
         public static boolean useCompletedCache = true;
