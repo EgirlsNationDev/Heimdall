@@ -9,7 +9,7 @@
     <version>2.1</version>
 
     <build>
-        <finalName>Mapcha-${project.version}</finalName>
+        <finalName>Heimdall-${project.version}</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
