@@ -122,10 +122,10 @@ public class Mapcha extends JavaPlugin {
         public static String permission = "heimdall.bypass";
 
         @ConfigValue("prefix")
-        public static String prefix = "[" + GREEN + "Heimdall" + RESET + "]";
+        public static String prefix = GOLD + "[" + GREEN + "Heimdall" + GOLD + "]"+RESET;
 
         @ConfigValue("commands")
-        public static List<String> commands = Arrays.asList("/register", "/login");
+        public static List<String> commands = Arrays.asList("/register", "/login", "/2fa", "/recover");
 
         @ConfigValue("captcha.lenght")
         public static int lenght = 4;
