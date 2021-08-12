@@ -2,6 +2,7 @@ package me.affanhaq.mapcha;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import fr.xephi.authme.api.v3.AuthMeApi;
 import me.affanhaq.keeper.Keeper;
 import me.affanhaq.keeper.data.ConfigFile;
 import me.affanhaq.keeper.data.ConfigValue;
@@ -16,6 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.awt.*;
+import java.io.IOException;
+import java.util.List;
 import java.util.*;
 
 import static me.affanhaq.mapcha.Mapcha.Config.*;
@@ -28,6 +32,9 @@ public class Mapcha extends JavaPlugin {
 
     private Listener authMeListener;
     private AuthMeHook authMeHook;
+    private String secret;
+
+    private final AuthMeApi authmeApi = AuthMeApi.getInstance();
 
     @Override
     public void onEnable() {
@@ -41,6 +48,12 @@ public class Mapcha extends JavaPlugin {
         }
         if(lenght < 2){
             lenght = 2;
+        }
+        if(secretLenght > 248){
+            secretLenght = 248;
+        }
+        if(secretLenght < 16){
+            secretLenght = 16;
         }
 
         authMeHook = new AuthMeHook();
@@ -58,8 +71,28 @@ public class Mapcha extends JavaPlugin {
 
         this.getCommand("captcha").setExecutor(new commandHandler(this));
         this.getCommand("join").setExecutor(new joinCommand(this));
+        this.getCommand("regenSecret").setExecutor(new regenSecretCommand(this));
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        if (secretEnabled) {
+            Bukkit.getScheduler().runTaskTimer(this, () -> {
+
+                genSecret();
+
+                if(webhookName.isEmpty()){
+                    return;
+                }
+                Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+                    try {
+                        postSecret();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+            }, 20, getTicksFromHours(refreshTime));
+        }
     }
 
     @Override
@@ -109,12 +142,70 @@ public class Mapcha extends JavaPlugin {
         }
     }
 
+    private void genSecret(){
+        String charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String charsetSpec = "*-+@$#&%!.";
+        StringBuilder random = new StringBuilder();
+        for (int i = 0; i < secretLenght; i++) {
+            if(new Random().nextBoolean()){
+                random.append(charsetSpec.charAt(new Random().nextInt(charsetSpec.length() - 1)));
+            }else{
+                random.append(charset.charAt(new Random().nextInt(charset.length() - 1)));
+            }
+
+        }
+        secret = random.toString();
+        Bukkit.getConsoleSender().sendMessage(prefix + GREEN + "New secret command is: /" + secret);
+    }
+
+    private void postSecret() throws IOException {
+        DiscordWebhook webhook = new DiscordWebhook(webhookURL);
+        if(!webhookName.isEmpty()) {
+            webhook.setUsername(webhookName);
+        } else{
+            webhook.setUsername(webhookName);
+        }
+        if(!avatarURL.isEmpty()){
+            webhook.setAvatarUrl(avatarURL);
+        }
+
+        DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
+                .setTitle(":lock New secret command")
+                .setDescription("Do `/" + secret + "` to bypass the captcha")
+                .setColor(Color.GREEN);
+        webhook.addEmbed(embed);
+        webhook.execute();
+    }
+
+    public void regenSecretAndPost() throws IOException {
+        genSecret();
+        if(webhookName.isEmpty()){
+            return;
+        }
+        postSecret();
+    }
+
+    public boolean isValidSecretCommand(Player player, String message){
+        if(message.equals("/" + secret) && authmeApi.isAuthenticated(player)){
+            return true;
+        }
+        return false;
+    }
+
+
     public void removeAuthMeHook(){
         authMeHook.removeAuthMeHook();
     }
 
     public boolean isAuthMeHookActive(){
         return authMeHook.isAuthMeHookActive();
+    }
+
+    public int getTicksFromHours(int hours){
+        int ticks = hours * 20;
+        ticks = ticks * 60;
+        ticks = ticks * 60;
+        return ticks;
     }
 
     @ConfigFile("config.yml")
@@ -138,6 +229,24 @@ public class Mapcha extends JavaPlugin {
 
         @ConfigValue("captcha.time")
         public static int timeLimit = 30;
+
+        @ConfigValue("secretCommand.enabled")
+        public static boolean secretEnabled = false;
+
+        @ConfigValue("secretCommand.lenght")
+        public static int secretLenght = 32;
+
+        @ConfigValue("secretCommand.refreshPeriodHours")
+        public static int refreshTime = 6;
+
+        @ConfigValue("secretCommand.webhookURL")
+        public static String webhookURL = "";
+
+        @ConfigValue("secretCommand.webhookName")
+        public static String webhookName = "Heimdall Secret";
+
+        @ConfigValue("secretCommand.webhookAvatarURL")
+        public static String avatarURL = "";
 
         @ConfigValue("misc.hidePlayers")
         public static boolean hidePlayers = true;

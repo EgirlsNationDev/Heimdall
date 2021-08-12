@@ -17,3 +17,6 @@ commands:
   join:
     description: Makes you join the server loool
     usage: /join
+  regenSecret:
+    description: Regenerates and posts secret again, if enabled.
+    usage: /regenSecret
