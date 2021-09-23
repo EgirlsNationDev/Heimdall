@@ -170,7 +170,7 @@ public class Mapcha extends JavaPlugin {
         }
 
         DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
-                .setTitle(":lock New secret command")
+                .setTitle(":lock: New secret command")
                 .setDescription("Do `/" + secret + "` to bypass the captcha")
                 .setColor(Color.GREEN);
         webhook.addEmbed(embed);
