@@ -2,7 +2,7 @@ name: Heimdall
 version: ${project.version}
 main: me.affanhaq.mapcha.Mapcha
 description: A simple captcha plugin, which uses maps as the captcha.
-softdepend:
+depend:
   - AuthMe
 
 permissions:
@@ -20,3 +20,6 @@ commands:
   regenSecret:
     description: Regenerates and posts secret again, if enabled.
     usage: /regenSecret
+  discord:
+    description: Shows discord linnk
+    usage: /discord

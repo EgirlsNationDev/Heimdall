@@ -212,6 +212,9 @@ public class Mapcha extends JavaPlugin {
     public static class Config {
         public static String permission = "heimdall.bypass";
 
+        @ConfigValue("dont-save-playerdata")
+        public static boolean removePlayerData = false;
+
         @ConfigValue("prefix")
         public static String prefix = GOLD + "[" + GREEN + "Heimdall" + GOLD + "]"+RESET;
 
@@ -251,10 +254,20 @@ public class Mapcha extends JavaPlugin {
         @ConfigValue("misc.hidePlayers")
         public static boolean hidePlayers = true;
 
-        @ConfigValue("server.mainName")
+        @ConfigValue("server.main.name")
         public static String mainServerName = "anarchy";
 
-        @ConfigValue("server.testName")
+        @ConfigValue("server.main.maintenance-enabled")
+        public static boolean maintenanceMode = false;
+
+        @ConfigValue("server.main.maintenance-msg")
+        public static String maintenanceMsg = prefix + " " + RED + "The main server is currently under maintenance. You can join the test server with "
+                + GOLD + "/join test" + RED + " or by doing " + GOLD + "/join" + RED + " again.\nFor more info check Discord announcements by doing " + GOLD + UNDERLINE + "/discord" ;
+
+        @ConfigValue("server.test.enabled")
+        public static boolean testServerEnabled = false;
+
+        @ConfigValue("server.test.name")
         public static String testServerName = "temp";
 
         @ConfigValue("messages.success")

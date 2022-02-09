@@ -1,10 +1,9 @@
 package me.affanhaq.mapcha.hooks;
 
 import fr.xephi.authme.api.v3.AuthMeApi;
-import org.bukkit.Bukkit;
 
 public class AuthMeHook {
-    private AuthMeApi authMeApi = null;
+    private static AuthMeApi authMeApi = null;
 
     public void initializeHook(){
         authMeApi = AuthMeApi.getInstance();
@@ -16,5 +15,9 @@ public class AuthMeHook {
 
     public boolean isAuthMeHookActive(){
         return authMeApi != null;
+    }
+
+    public static AuthMeApi getAuthmeApi(){
+        return authMeApi;
     }
 }

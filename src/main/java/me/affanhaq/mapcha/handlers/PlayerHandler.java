@@ -50,8 +50,7 @@ public class PlayerHandler implements Listener {
         }
 
         // creating a captcha player
-        CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha)
-                .cleanPlayer();
+        CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha);
 
         // making a map for the player
         String version = Bukkit.getVersion();
@@ -83,9 +82,14 @@ public class PlayerHandler implements Listener {
             return;
         }
 
-        // giving the player their items back
-        player.resetInventory();
         mapcha.getPlayerManager().removePlayer(player);
+
+        joinCommand.didCommandList.remove(event.getPlayer().getUniqueId());
+        if(removePlayerData){
+            event.getPlayer().getInventory().clear();
+            event.getPlayer().getInventory().setArmorContents(null);
+            event.getPlayer().updateInventory();
+        }
     }
 
     @EventHandler

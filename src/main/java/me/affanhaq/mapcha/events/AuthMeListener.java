@@ -43,8 +43,7 @@ public class AuthMeListener implements Listener {
         }
 
         // creating a captcha player
-        CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha)
-                .cleanPlayer();
+        CaptchaPlayer captchaPlayer = new CaptchaPlayer(player, genCaptcha(), mapcha);
 
         // making a map for the player
         String version = Bukkit.getVersion();

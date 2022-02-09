@@ -24,7 +24,6 @@ public class CaptchaHandler implements Listener {
         CaptchaPlayer player = event.getPlayer();
 
         player.getPlayer().sendMessage(prefix + " " + successMessage);
-        player.resetInventory();
 
         // adding the player to set so when he logs back in he won't have to complete the captcha again
         if (useCompletedCache) {

@@ -5,7 +5,6 @@ import com.hyd.captcha.FontRepository;
 import com.hyd.captcha.background.CirclesBackground;
 import me.affanhaq.mapcha.Mapcha;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,8 +19,6 @@ public class CaptchaPlayer {
     private final Player player;
     private final String captcha;
 
-    private final ItemStack[] contents;
-    private final ItemStack[] armour;
     private int tries;
     private final long lastTime;
 
@@ -34,9 +31,6 @@ public class CaptchaPlayer {
         this.player = player;
         this.captcha = captcha;
 
-        // getting the players inventory & armor
-        contents = player.getInventory().getContents();
-        armour = player.getInventory().getArmorContents();
 
         lastTime = System.currentTimeMillis();
         tries = 0;
@@ -92,22 +86,6 @@ public class CaptchaPlayer {
         //g.drawString(captcha, (int) ((image.getWidth() - g.getFontMetrics().getStringBounds(captcha, g).getWidth()) / 2), 105);
 
         return image;
-    }
-
-    /**
-     * Gives the players items back.
-     */
-    public void resetInventory() {
-        player.getInventory().setContents(contents);
-        player.getInventory().setArmorContents(armour);
-        player.updateInventory();
-    }
-
-    public CaptchaPlayer cleanPlayer() {
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(null);
-        player.updateInventory();
-        return this;
     }
 
     public String getCaptcha() {
