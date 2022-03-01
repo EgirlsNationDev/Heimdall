@@ -38,6 +38,12 @@ public class PlayerHandler implements Listener {
             hidePlayers(event.getPlayer());
         }
 
+        if(removePlayerData){
+            event.getPlayer().getInventory().clear();
+            event.getPlayer().getInventory().setArmorContents(null);
+            event.getPlayer().updateInventory();
+        }
+
         if (mapcha.isAuthMeHookActive()) {
             return;
         }

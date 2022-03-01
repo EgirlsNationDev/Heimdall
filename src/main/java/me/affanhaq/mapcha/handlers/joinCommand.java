@@ -42,16 +42,19 @@ public class joinCommand implements CommandExecutor {
                 sendToMain(player);
             }
 
-            String server = args[0];
+            String server = null;
+            if(args.length == 1){
+                server = args[0];
+            }
             if(server == null){
-                sender.sendMessage(prefix + " " + ChatColor.RED + "Error occured while processing the command");
                 return true;
             }
             if(server.equalsIgnoreCase("main") || server.equalsIgnoreCase("anarchy")){
                 sendToMain(player);
-            }
-            if(server.equalsIgnoreCase("test") || server.equalsIgnoreCase("temp")){
+            }else if(server.equalsIgnoreCase("test") || server.equalsIgnoreCase("temp")){
                 sendToTest(player);
+            }else{
+                sender.sendMessage(prefix + " " + ChatColor.RED + "This server doesn't exist. Only servers are main and test");
             }
         }
         return true;

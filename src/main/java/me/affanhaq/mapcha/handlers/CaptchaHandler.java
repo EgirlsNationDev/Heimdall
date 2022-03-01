@@ -30,6 +30,12 @@ public class CaptchaHandler implements Listener {
             mapcha.getCompletedCache().add(player.getPlayer().getUniqueId());
         }
 
+        if(removePlayerData){
+            player.getPlayer().getInventory().clear();
+            player.getPlayer().getInventory().setArmorContents(null);
+            player.getPlayer().updateInventory();
+        }
+
         mapcha.getPlayerManager().removePlayer(player);
         String msg = ChatColor.GOLD + "[" + ChatColor.RED + "Captcha" + ChatColor.GOLD + "] " + ChatColor.GREEN + "Now do /join to join the main server";
         player.getPlayer().sendMessage(msg);

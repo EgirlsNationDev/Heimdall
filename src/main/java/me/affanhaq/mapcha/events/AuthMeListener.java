@@ -1,7 +1,10 @@
 package me.affanhaq.mapcha.events;
 
+import fr.xephi.authme.api.v3.AuthMeApi;
+import fr.xephi.authme.api.v3.AuthMePlayer;
 import fr.xephi.authme.events.LoginEvent;
 import me.affanhaq.mapcha.Mapcha;
+import me.affanhaq.mapcha.hooks.AuthMeHook;
 import me.affanhaq.mapcha.player.CaptchaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static me.affanhaq.mapcha.Mapcha.Config.*;
 import static me.affanhaq.mapcha.handlers.PlayerHandler.genCaptcha;
@@ -28,6 +32,8 @@ public class AuthMeListener implements Listener {
         this.mapcha = mapcha;
     }
 
+    private final AuthMeApi authmeApi = AuthMeHook.getAuthmeApi();
+
     @EventHandler
     public void onLogin(LoginEvent event){
         //AuthMe event. Gets triggered when player logs in successfully.
@@ -39,6 +45,14 @@ public class AuthMeListener implements Listener {
 
         if(player.hasPermission(permission) || (useCompletedCache && mapcha.getCompletedCache().contains(player.getUniqueId()))){
             player.sendMessage(prefix + ChatColor.GREEN + "Do /join to join the server." );
+            Optional<AuthMePlayer> playerInfo = authmeApi.getPlayerInfo(player.getName());
+            if(playerInfo.isPresent()){
+                AuthMePlayer authMePlayer = playerInfo.get();
+                if(!authMePlayer.getEmail().isPresent()){
+                    player.sendMessage(prefix + ChatColor.RED + "You don't have email linked to your account. This will make it difficult to recover your password if you loose it.\n" +
+                            "It is recommended to add one using /email add <email> <emailAgain>");
+                }
+            }
             return;
         }
 
